@@ -1,21 +1,24 @@
-FROM tomcat:11.0.10-jdk21-temurin-noble
-# Set maintainer label (optional but good practice)
+FROM public.ecr.aws/docker/library/tomcat:11.0.11-jdk21-temurin-noble
+
 LABEL maintainer="satyam.pandely@example.com"
 
-# Remove default ROOT app (optional, keeps container clean)
+# Remove default ROOT app
 RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
-# Create a user for running the application
+# Create non-root user
 RUN useradd -m flight-service
 
-# Copy your JAR file into the webapps directory
-COPY ./target/flight-service*.jar /usr/local/tomcat/webapps/
+# Copy WAR file into Tomcat (Spring Boot WAR deployment)
+COPY ./target/mbooking*.jar /usr/local/tomcat/webapps/mbooking.war
 
-# Expose the default Tomcat port
-EXPOSE 8080
+# Ensure Tomcat is owned by non-root user
+RUN chown -R flight-service:flight-service /usr/local/tomcat
 
-# Set the user to 'mbooking-ms' for security
+# Switch to non-root user
 USER flight-service
 
-# Default command to run Tomcat
+# Expose Tomcat port
+EXPOSE 8080
+
+# Start Tomcat
 CMD ["catalina.sh", "run"]
