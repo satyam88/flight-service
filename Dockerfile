@@ -9,7 +9,7 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT
 RUN useradd -m flight-service
 
 # Copy WAR file into Tomcat (Spring Boot WAR deployment)
-COPY ./target/mbooking*.jar /usr/local/tomcat/webapps/mbooking.war
+COPY ./target/flight-service*.jar /usr/local/tomcat/webapps/mbooking.war
 
 # Ensure Tomcat is owned by non-root user
 RUN chown -R flight-service:flight-service /usr/local/tomcat
